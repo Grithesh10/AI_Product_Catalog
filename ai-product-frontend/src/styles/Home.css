@@ -1,0 +1,294 @@
+/* ---------- Global ---------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f4f7fb;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  max-width: 1300px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2563eb;
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 18px;
+}
+
+/* ---------- Upload Box ---------- */
+
+.upload-box {
+  background: white;
+  border: 3px dashed #3b82f6;
+  border-radius: 18px;
+  padding: 50px;
+  text-align: center;
+  cursor: pointer;
+  transition: .3s;
+  margin-bottom: 25px;
+}
+
+.upload-box:hover {
+  background: #eff6ff;
+}
+
+.upload-icon {
+  font-size: 70px;
+  margin-bottom: 15px;
+}
+
+.upload-box h2 {
+  color: #2563eb;
+  margin-bottom: 10px;
+}
+
+.upload-box p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.preview-image {
+  max-width: 320px;
+  border-radius: 15px;
+}
+
+/* ---------- Analyze Button ---------- */
+
+.analyze-btn {
+  width: 100%;
+  padding: 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: .3s;
+  margin-bottom: 35px;
+}
+
+.analyze-btn:hover {
+  background: #1d4ed8;
+}
+
+/* ---------- Product Card ---------- */
+
+.product-card {
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  display: flex;
+  gap: 35px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  margin-bottom: 30px;
+}
+
+.product-image {
+  flex: 1;
+  text-align: center;
+}
+
+.product-image img {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 15px;
+}
+
+.product-details {
+  flex: 2;
+}
+
+.product-details h2 {
+  color: #2563eb;
+  margin-bottom: 25px;
+}
+
+/* ---------- Detail Row ---------- */
+
+.detail-row {
+  display: flex;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-row strong {
+  width: 150px;
+  color: #2563eb;
+}
+
+.detail-row span {
+  flex: 1;
+  color: #444;
+}
+
+/* ---------- Confidence ---------- */
+
+.confidence-container {
+  width: 100%;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #ddd;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+}
+
+/* ---------- Badges ---------- */
+
+.badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  background: #2563eb;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.tag {
+  background: #16a34a;
+}
+
+/* ---------- Prediction Table ---------- */
+
+.prediction-card {
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  margin-top: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.prediction-card h2 {
+  margin-bottom: 20px;
+}
+
+.prediction-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prediction-table th {
+  background: #2563eb;
+  color: white;
+  padding: 14px;
+}
+
+.prediction-table td {
+  padding: 14px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+/* ---------- Buttons ---------- */
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.action-buttons button {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.action-buttons button:hover {
+  background: #1d4ed8;
+}
+
+/* ---------- Loading ---------- */
+
+.loading-container {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.spinner {
+  width: 65px;
+  height: 65px;
+  border: 6px solid #ddd;
+  border-top: 6px solid #2563eb;
+  border-radius: 50%;
+  animation: spin .9s linear infinite;
+  margin: auto auto 20px;
+}
+
+@keyframes spin {
+
+  100% {
+    transform: rotate(360deg);
+  }
+
+}
+
+/* ---------- Mobile ---------- */
+
+@media(max-width:900px){
+
+.product-card{
+
+flex-direction:column;
+
+}
+
+.product-image img{
+
+max-width:100%;
+
+}
+
+.detail-row{
+
+flex-direction:column;
+
+}
+
+.detail-row strong{
+
+width:auto;
+
+}
+
+.action-buttons{
+
+flex-direction:column;
+
+}
+
+}

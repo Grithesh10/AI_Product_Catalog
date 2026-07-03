@@ -1,0 +1,17 @@
+# AI models
+models/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+uploads/
+
+# React
+ai-product-frontend/node_modules/
+node_modules/
+build/
+
+# VS Code
+.vscode/
