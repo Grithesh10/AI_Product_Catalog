@@ -1,24 +1,50 @@
 from transformers import CLIPProcessor, CLIPModel
 from PIL import Image
+from pathlib import Path
 import torch
 
-# Load CLIP model from local cache
-model = CLIPModel.from_pretrained(
-    "openai/clip-vit-base-patch32",
-    local_files_only=True
-)
+processor = None
+model = None
+CATEGORIES = None
 
-processor = CLIPProcessor.from_pretrained(
-    "openai/clip-vit-base-patch32",
-    local_files_only=True
-)
 
-# Load categories
-with open("data/categories.txt", "r") as f:
-    CATEGORIES = [line.strip() for line in f if line.strip()]
+def load_clip():
+    global processor, model, CATEGORIES
+
+    if processor is None or model is None:
+
+        print("Loading CLIP Model...")
+
+        model = CLIPModel.from_pretrained(
+            "openai/clip-vit-base-patch32"
+        )
+
+        processor = CLIPProcessor.from_pretrained(
+            "openai/clip-vit-base-patch32"
+        )
+
+        model.eval()
+
+        categories_path = (
+            Path(__file__).resolve().parents[2]
+            / "data"
+            / "categories.txt"
+        )
+
+        with open(categories_path, "r") as f:
+            CATEGORIES = [
+                line.strip()
+                for line in f
+                if line.strip()
+            ]
+
+        print("CLIP Loaded Successfully!")
 
 
 def classify_image(image_path):
+
+    load_clip()
+
     image = Image.open(image_path).convert("RGB")
 
     inputs = processor(
@@ -31,11 +57,10 @@ def classify_image(image_path):
     with torch.no_grad():
         outputs = model(**inputs)
 
-    logits = outputs.logits_per_image
-    probs = logits.softmax(dim=1)[0]
+    probs = outputs.logits_per_image.softmax(dim=1)[0]
 
-    # Get top 5 predictions (or fewer if categories are less than 5)
     k = min(5, len(CATEGORIES))
+
     top_probs, top_indices = torch.topk(probs, k)
 
     top_predictions = []

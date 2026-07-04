@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-import os
+from pathlib import Path
 import shutil
 
 from backend.models.blip import generate_caption
@@ -15,7 +15,9 @@ from backend.utils.keywords import generate_keywords
 from backend.utils.tags import generate_tags
 
 app = FastAPI(
-    title="AI Product Catalog Generator"
+    title="AI Product Catalog Generator",
+    description="AI-powered Product Catalog Generator",
+    version="1.0.0"
 )
 
 # ==========================
@@ -25,19 +27,25 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://localhost:3001",
         "http://127.0.0.1:3000",
-        "http://127.0.0.1:3001",
+        "https://*.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# ==========================
+# Upload Folder
+# ==========================
+BASE_DIR = Path(__file__).resolve().parent.parent
+UPLOAD_FOLDER = BASE_DIR / "uploads"
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 
 
+# ==========================
+# Home Route
+# ==========================
 @app.get("/")
 def home():
     return {
@@ -46,36 +54,41 @@ def home():
     }
 
 
+# ==========================
+# Upload API
+# ==========================
 @app.post("/upload")
 async def upload_image(file: UploadFile = File(...)):
 
     # Save uploaded image
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file_path = UPLOAD_FOLDER / file.filename
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Generate Caption
-    caption = generate_caption(file_path)
+    image_path = str(file_path)
 
-    # Classify Image
-    classification = classify_image(file_path)
+    # Caption
+    caption = generate_caption(image_path)
 
-    # Extract Attributes
+    # Classification
+    classification = classify_image(image_path)
+
+    # Attributes
     attributes = extract_attributes(caption)
 
-    # Detect Brand using OCR
-    ocr_brand = detect_brand(file_path)
+    # OCR Brand
+    ocr_brand = detect_brand(image_path)
 
     if ocr_brand != "Unknown":
         brand = ocr_brand
     else:
-        brand = attributes["brand"]
+        brand = attributes.get("brand", "Unknown")
 
-    # Detect Color
-    color = detect_color(file_path)
+    # Color
+    color = detect_color(image_path)
 
-    # Generate Title
+    # Title
     title = generate_title(
         classification["category"],
         brand,
@@ -83,7 +96,7 @@ async def upload_image(file: UploadFile = File(...)):
         caption
     )
 
-    # Generate Keywords
+    # Keywords
     keywords = generate_keywords(
         classification["category"],
         brand,
@@ -91,21 +104,20 @@ async def upload_image(file: UploadFile = File(...)):
         caption
     )
 
-    # Generate Description
+    # Description
     description = generate_description(
         classification["category"],
         brand,
         color
     )
 
-    # Generate Tags
+    # Tags
     tags = generate_tags(
         classification["category"],
         brand,
         color
     )
 
-    # Return Response
     return {
         "filename": file.filename,
         "title": title,
@@ -118,5 +130,4 @@ async def upload_image(file: UploadFile = File(...)):
         "description": description,
         "tags": tags,
         "top_predictions": classification["top_predictions"]
-        
     }

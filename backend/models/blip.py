@@ -1,30 +1,47 @@
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
+import torch
 
-print("Loading BLIP Model...")
+processor = None
+model = None
 
-processor = BlipProcessor.from_pretrained(
-    "Salesforce/blip-image-captioning-base"
-)
 
-model = BlipForConditionalGeneration.from_pretrained(
-    "Salesforce/blip-image-captioning-base"
-)
+def load_blip():
+    global processor, model
 
-print("BLIP Loaded Successfully!")
+    if processor is None or model is None:
+        print("Loading BLIP Model...")
+
+        processor = BlipProcessor.from_pretrained(
+            "Salesforce/blip-image-captioning-base"
+        )
+
+        model = BlipForConditionalGeneration.from_pretrained(
+            "Salesforce/blip-image-captioning-base"
+        )
+
+        model.eval()
+
+        print("BLIP Loaded Successfully!")
 
 
 def generate_caption(image_path):
     """
-    Generate caption from image
+    Generate image caption using BLIP
     """
+
+    load_blip()
 
     image = Image.open(image_path).convert("RGB")
 
-    inputs = processor(image, return_tensors="pt")
+    inputs = processor(images=image, return_tensors="pt")
 
-    output = model.generate(**inputs)
+    with torch.no_grad():
+        output = model.generate(**inputs)
 
-    caption = processor.decode(output[0], skip_special_tokens=True)
+    caption = processor.decode(
+        output[0],
+        skip_special_tokens=True
+    )
 
     return caption

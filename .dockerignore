@@ -1,0 +1,33 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.git/
+.gitignore
+
+# React
+node_modules/
+build/
+
+# Uploads
+uploads/
+
+# VS Code
+.vscode/
+
+# Test files
+test_*.py
+
+# Sample images
+cycle.jpg
+rithesh.jpg
+
+# Hugging Face cache
+.cache/
+
+# Logs
+*.log
