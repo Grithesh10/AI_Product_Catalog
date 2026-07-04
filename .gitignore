@@ -1,17 +1,27 @@
-# AI models
-models/
-
 # Python
 venv/
 __pycache__/
 *.pyc
-.env
 uploads/
+.env
+
+# HuggingFace downloaded models
+models/
 
 # React
-ai-product-frontend/node_modules/
 node_modules/
 build/
 
 # VS Code
 .vscode/
+
+# Images used for testing
+cycle.jpg
+rithesh.jpg
+bottle.jpg
+shoe.jpg
+shoe2.jpg
+backpack.jpg
+
+# Tests
+test_*.py
