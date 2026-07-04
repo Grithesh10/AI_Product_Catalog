@@ -21,20 +21,19 @@ app = FastAPI(
 )
 
 # ==========================
-# CORS Middleware
+# CORS
 # ==========================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://*.vercel.app",
+        "https://ai-product-catalog.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # ==========================
 # Upload Folder
 # ==========================
@@ -42,9 +41,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 UPLOAD_FOLDER = BASE_DIR / "uploads"
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 
-
 # ==========================
-# Home Route
+# Home
 # ==========================
 @app.get("/")
 def home():
@@ -53,14 +51,12 @@ def home():
         "status": "API Running Successfully"
     }
 
-
 # ==========================
 # Upload API
 # ==========================
 @app.post("/upload")
 async def upload_image(file: UploadFile = File(...)):
 
-    # Save uploaded image
     file_path = UPLOAD_FOLDER / file.filename
 
     with open(file_path, "wb") as buffer:
@@ -68,16 +64,16 @@ async def upload_image(file: UploadFile = File(...)):
 
     image_path = str(file_path)
 
-    # Caption
+    # Generate caption
     caption = generate_caption(image_path)
 
-    # Classification
+    # Classify image
     classification = classify_image(image_path)
 
-    # Attributes
+    # Extract attributes
     attributes = extract_attributes(caption)
 
-    # OCR Brand
+    # Detect brand
     ocr_brand = detect_brand(image_path)
 
     if ocr_brand != "Unknown":
@@ -85,10 +81,10 @@ async def upload_image(file: UploadFile = File(...)):
     else:
         brand = attributes.get("brand", "Unknown")
 
-    # Color
+    # Detect color
     color = detect_color(image_path)
 
-    # Title
+    # Generate title
     title = generate_title(
         classification["category"],
         brand,
@@ -96,7 +92,7 @@ async def upload_image(file: UploadFile = File(...)):
         caption
     )
 
-    # Keywords
+    # Generate keywords
     keywords = generate_keywords(
         classification["category"],
         brand,
@@ -104,14 +100,14 @@ async def upload_image(file: UploadFile = File(...)):
         caption
     )
 
-    # Description
+    # Generate description
     description = generate_description(
         classification["category"],
         brand,
         color
     )
 
-    # Tags
+    # Generate tags
     tags = generate_tags(
         classification["category"],
         brand,
